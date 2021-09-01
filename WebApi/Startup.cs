@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Application.Commands;
 using Application.Interfaces;
-using Application.Queries;
 using Infrastructure.Persistence;
 using CommandsMediatR = Application.CommandsMediatR;
 using QueriesMediatR = Application.QueriesMediatR;
@@ -34,22 +32,6 @@ namespace WebApi
             services.AddControllers();
 
             services.AddHttpContextAccessor();
-
-            //CQRS PAttern
-            services.AddSingleton<IApplicationContext, ApplicationContext>()
-                    //Add commands handlers
-                    .AddScoped<ICommandHandler<AddNewProductCommand>, AddNewProductCommandHandler>()
-                    .AddScoped<ICommandHandler<DeleteProductCommand>, DeleteProductCommandHandler>()
-                    .AddScoped<ICommandHandler<UpdateProductCurrentStockCommand>, UpdateProductCurrentStockCommandHandler>()
-                    .AddScoped<ICommandHandler<UpdateProductUnitPriceCommand>, UpdateProductUnitPriceCommandHandler>()
-                    // Add queries handlers
-                    .AddScoped<IQueryHandler<FindOutOfStockProductsQuery>, FindOutOfStockProductsQueryHandler>()
-                    .AddScoped<IQueryHandler<GetProductsByNameQuery>, GetProductsByNameQueryHandler>()
-
-                    .AddScoped<ICommandDispatcher, CommandDispatcher>()
-                    .AddScoped<IQueryDispatcher, QueryDispatcher>();
-
-            //CQRS Pattern with MediatR
 
             services.AddEntityFrameworkInMemoryDatabase()
                     .AddDbContext<ApplicationContextInMemoryDB>(opt => opt.UseInMemoryDatabase(databaseName: "CQRS-MediatR"), ServiceLifetime.Singleton)
